@@ -16,7 +16,7 @@
  * Plugin Name:       Vextras for WooCommerce
  * Plugin URI:        https://vextras.com/connect-your-store/
  * Description:       Vextras - WooCommerce plugin
- * Version:           0.0.1
+ * Version:           2.0.0
  * Author:            Vextras
  * Author URI:        https://vextras.com
  * License:           GPL-2.0+
