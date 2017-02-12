@@ -168,24 +168,6 @@ function deactivate_vextras_woocommerce() {
 }
 
 /**
- * See if we need to run any updates.
- */
-function run_vextras_plugin_updater() {
-	if (!class_exists('PucFactory')) {
-		require plugin_dir_path( __FILE__ ) . 'includes/plugin-update-checker/plugin-update-checker.php';
-	}
-
-	/** @var \PucGitHubChecker_3_1 $checker */
-	$updater = PucFactory::getLatestClassVersion('PucGitHubChecker');
-
-	if (class_exists($updater)) {
-		$env = vextras_environment_variables();
-		$checker = new $updater('https://github.com/vextras/mc-woocommerce/', __FILE__, $env->repo, 1);
-		$checker->handleManualCheck();
-	}
-}
-
-/**
  * @param $action
  * @param $message
  * @param array $data
@@ -309,9 +291,6 @@ if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 	$forwarded_address = explode(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
 	$_SERVER['REMOTE_ADDR'] = $forwarded_address[0];
 }
-
-/** Add the plugin updater function ONLY when they are logged in as admin. */
-add_action('admin_init', 'run_vextras_plugin_updater');
 
 /** Add all the Vextras hooks. */
 run_vextras_woocommerce();
