@@ -89,7 +89,6 @@ $verified_account = $handler->isConfigured();
     <p>Check out these resources or contact us anytime for assistance.</p>
     <ul>
         <li><a href="https://app.vextras.com/" target="_blank">Vextras account dashboard</a></li>
-        <li><a href="#" target="_blank">FAQ's</a></li>
         <li><a href="https://vextras.com/docs" target="_blank">Documentation</a></li>
         <li><a href="https://vextras.com/contact-us" target="_blank">Contact us</a></li>
     </ul>
