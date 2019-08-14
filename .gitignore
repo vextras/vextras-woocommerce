@@ -1,3 +1,5 @@
 .DS_Store
 .svn/
 .idea/
+.idea/php.xml
+.idea/phpunit.xml

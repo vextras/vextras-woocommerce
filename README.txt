@@ -49,7 +49,7 @@ Every [app integration](https://www.vextras.com/apps) we've built goes far beyon
 * White label e-mail sending - Make delivery of any workflows message appear like it’s coming from your store’s domain.
 * Dynamic workflow data - Personalize any e-mail workflow with hundreds of content variables that are available from your store’s API.
 * Starter e-mail templates - Design your own HTML templates or use our starter templates to get going in no time.
-* Google UTM tracking - We automatically apply Google Analytics UTM tracking parameters to your worfklow messages, so you can keep all of your site’s reporting in sync.
+* Google UTM tracking - We automatically apply Google Analytics UTM tracking parameters to your workflow messages, so you can keep all of your site’s reporting in sync.
 * Free training - If you need help we’re happy to schedule a call anytime. We also have an extensive docs area that’s available 24/7.
 * No commitment - There are no long-term contracts when you use Vextras. Pay as long as you feel our product provides value in building your online business.
 
@@ -135,3 +135,5 @@ This upgrade is now required to be compatible with the [Vextras 7.0](https://www
 * Added ability to control the opt-in box location at checkout.
 * Added capability to click back to a cart on any device i.e. mobile, tablet or desktop, not just the original source of where an abandoned cart originated.
 * Enabled toggle to turn off all WooCommerce notifications if you’d prefer to use our workflows for notifications instead.
+
+

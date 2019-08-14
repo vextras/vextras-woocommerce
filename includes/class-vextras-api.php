@@ -27,6 +27,7 @@ class VextrasApi extends Vextras_Woocommerce_Options
             'uninstall' => "{$env->api_endpoint}/un-install/{$install_key}",
             'account' => "{$env->api_endpoint}/account/{$install_key}",
             'orders' => "{$env->api_endpoint}/orders/{$public_key}",
+            'products' => "{$env->api_endpoint}/products/{$public_key}",
             'carts' => "{$env->api_endpoint}/carts/{$public_key}",
         );
     }
@@ -86,7 +87,7 @@ class VextrasApi extends Vextras_Woocommerce_Options
         if (isset($json->success) && $json->success) {
             $json->data->verified_account = true;
             $this->mergeOptions((array) $json->data);
-            vextras_log('install', 'tracing install success', (array) $json->data);
+            vextras_log('install', 'tracing install success', $this->getOptions());
             return array('success' => true, 'data' => (array) $json->data);
         }
 
@@ -117,7 +118,7 @@ class VextrasApi extends Vextras_Woocommerce_Options
      */
     public function cart($email, $prev, $campaign, $cart)
     {
-        if (!$this->verifiedAccount() || $this->isPaused() || $this->isBroken()) return false;
+        if ($this->shouldPreventApiRequests()) return false;
 
         $checkout_url = wc_get_checkout_url();
 
@@ -164,7 +165,7 @@ class VextrasApi extends Vextras_Woocommerce_Options
      */
     public function order($id, $campaign)
     {
-        if (!$this->verifiedAccount() || $this->isPaused() || $this->isBroken()) return false;
+        if ($this->shouldPreventApiRequests()) return false;
 
         $order = new WC_Order($id);
 
@@ -172,7 +173,26 @@ class VextrasApi extends Vextras_Woocommerce_Options
             'order_id' => $id,
             'campaign' => $campaign,
             'status' => $order->get_status(),
-            'date' => $order->order_date,
+            'date' => $order->get_date_created(),
+        ));
+    }
+
+    /**
+     * @param $id
+     * @param null $action
+     * @return array|bool
+     */
+    public function product($id, $action = null)
+    {
+        if ($this->shouldPreventApiRequests()) return false;
+
+        $product = wc_get_product($id);
+        if (empty($product) || !$product->get_sku()) return false;
+
+        return $this->post($this->endpoints['products'], array(
+            'product_id' => $id,
+            'product_code' => $product->get_sku(),
+            'action' => $action,
         ));
     }
 
