@@ -294,3 +294,53 @@ if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 
 /** Add all the Vextras hooks. */
 run_vextras_woocommerce();
+
+add_action('rest_api_init', function () {
+    try {
+        $path = plugin_dir_path( __FILE__ );
+        include_once $path.'includes/api/class-vextras-rest-api.php';
+        include_once $path.'includes/api/class-vextras-rest-api-skus.php';
+        $skus = new Vextras_Rest_Api_Skus();
+        $skus->register_routes();
+    } catch (\Exception $e) {
+        error_log('VEXTRAS :: '.$e->getMessage().' on '.$e->getLine().' in '.$e->getFile());
+    }
+});
+
+add_filter('woocommerce_get_catalog_ordering_args', 'vextras_woocommerce_get_catalog_ordering_args');
+
+function vextras_woocommerce_get_catalog_ordering_args( $args ) {
+    $orderby_value = isset($_GET['sort']) ? wc_clean($_GET['sort']) : apply_filters('woocommerce_default_catalog_orderby', get_option('woocommerce_default_catalog_orderby'));
+
+    if ('price_high' == $orderby_value) {
+        $args['orderby'] = 'meta_value_num';
+        $args['order'] = 'DESC';
+        $args['meta_key'] = '_price';
+    } elseif ('price_low' === $orderby_value) {
+        $args['orderby'] = 'meta_value_num';
+        $args['order'] = 'ASC';
+        $args['meta_key'] = '_price';
+    } elseif ('qty_high' === $orderby_value) {
+        $args['orderby'] = 'meta_value_num';
+        $args['order'] = 'DESC';
+        $args['meta_key'] = '_stock';
+    } elseif ('qty_low' === $orderby_value) {
+        $args['orderby'] = 'meta_value_num';
+        $args['order'] = 'ASC';
+        $args['meta_key'] = '_stock';
+    }
+
+    return $args;
+}
+
+add_filter( 'woocommerce_default_catalog_orderby_options', 'custom_woocommerce_catalog_orderby' );
+add_filter( 'woocommerce_catalog_orderby', 'vextras_woocommerce_catalog_orderby' );
+
+function vextras_woocommerce_catalog_orderby($sortby) {
+    $sortby['price_high'] = 'Price Highest To Lowest';
+    $sortby['price_low'] = 'Price Lowest To Highest';
+    $sortby['qty_high'] = 'Quantity Highest To Lowest';
+    $sortby['qty_low'] = 'Quantity Lowest To Highest';
+
+    return $sortby;
+}

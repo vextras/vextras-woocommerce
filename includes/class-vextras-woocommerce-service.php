@@ -118,6 +118,48 @@ class Vextras_Service extends Vextras_Woocommerce_Options
     }
 
     /**
+     * @param $order_id
+     * @param $customer_id
+     * @return array
+     */
+    public function getOrderMeta($order_id, $customer_id)
+    {
+        return array(
+            'subscriber_status' => $this->getSubscriberStatus($customer_id),
+            'order_subscriber_status' => $this->getSubscriberStatusForOrder($order_id),
+            'user_meta' => $this->getUserMeta($customer_id),
+            'tracking_numbers' => $this->getTrackingNumbers($order_id),
+        );
+    }
+
+    /**
+     * Get the subscriber status on a specific order.
+     *
+     * @param $order_id
+     * @return bool
+     */
+    public function getTrackingNumbers($order_id)
+    {
+        return get_post_meta($order_id, 'vextras_woocommerce_tracking_numbers');
+    }
+
+    /**
+     * @param $order_id
+     * @param $tracking_number
+     * @return array|bool
+     */
+    public function addTrackingNumber($order_id, $tracking_number, $provider = null, $date_shipped = null, $custom_url = null)
+    {
+        if ( function_exists( 'wc_st_add_tracking_number' ) ) {
+            wc_st_add_tracking_number($order_id, $tracking_number, $provider, $date_shipped, $custom_url);
+        }
+        $tracking_numbers = $this->getTrackingNumbers($order_id);
+        $tracking_numbers[] = $tracking_number;
+        update_post_meta($order_id, $tracking_numbers);
+        return $tracking_numbers;
+    }
+
+    /**
      * Get subscriber status for a specific user id
      * @param $user_id
      * @return bool
@@ -194,6 +236,39 @@ class Vextras_Service extends Vextras_Woocommerce_Options
     }
 
     /**
+     * @param $product_id
+     */
+    public function handleProductHasBeenPublished($product_id)
+    {
+        if (($this->isConfigured() && $this->isActive())) {
+            // handle the order update
+            $this->api->product($product_id, 'saved');
+        }
+    }
+
+    /**
+     * @param $product_id
+     */
+    public function handleProductHasBeenDeleted($product_id)
+    {
+        if (($this->isConfigured() && $this->isActive())) {
+            // handle the order update
+            $this->api->product($product_id, 'trashed');
+        }
+    }
+
+    /**
+     * @param $product_id
+     */
+    public function handleProductHasBeenRestored($product_id)
+    {
+        if (($this->isConfigured() && $this->isActive())) {
+            // handle the order update
+            $this->api->product($product_id, 'restored');
+        }
+    }
+
+    /**
      * On Ajax adds
      */
     public function handleAjaxAddedToCart()
@@ -232,17 +307,19 @@ class Vextras_Service extends Vextras_Woocommerce_Options
     {
         $this->handleCartUpdated();
     }
+
     /**
-     * @return bool|mixed
+     * @param null $updated
+     * @return bool|mixed|null
      */
-    public function handleCartUpdated()
+    public function handleCartUpdated($updated = null)
     {
-        if (!$this->usesAbandonedCart() || !($this->isConfigured() && $this->isActive())) {
+        if ($updated === false || $this->is_admin) {
             return false;
         }
 
-        if ($this->is_admin) {
-            return false;
+        if (!$this->usesAbandonedCart() || !($this->isConfigured() && $this->isActive())) {
+            return !is_null($updated) ? $updated : false;
         }
 
         if (empty($this->cart)) {
@@ -264,7 +341,8 @@ class Vextras_Service extends Vextras_Woocommerce_Options
             // if the cart is empty, delete it.
             if (empty($this->cart)) {
                 $prev = isset($previous_email_submission) ? $previous_email_submission : null;
-                return $this->api->cart($email_submission, $prev, null, array());
+                $response = $this->api->cart($email_submission, $prev, null, array());
+                return !is_null($updated) ? $updated : $response;
             }
 
             if ($this->cart && !empty($this->cart)) {
@@ -275,14 +353,13 @@ class Vextras_Service extends Vextras_Woocommerce_Options
                 // grab the cookie data that could play important roles in the submission
                 $campaign = $this->getCampaignTrackingID();
                 $prev = isset($previous_email_submission) ? $previous_email_submission : null;
-
-                return $this->api->cart($email_submission, $prev, $campaign, $this->cart);
+                $response = $this->api->cart($email_submission, $prev, $campaign, $this->cart);
+                return !is_null($updated) ? $updated : $response;
             }
-
-            return true;
+            return !is_null($updated) ? $updated : true;
         }
 
-        return false;
+        return !is_null($updated) ? $updated : false;
     }
 
     /**
@@ -295,9 +372,61 @@ class Vextras_Service extends Vextras_Woocommerce_Options
     public function handlePostSaved($post_id, $post, $update)
     {
         if ($post->post_status !== 'auto-draft') {
-            if ('shop_order' == $post->post_type) {
-                $this->handleOrderStatusChanged($post_id);
+            switch ($post->post_type) {
+                case 'shop_order':
+                    $this->handleOrderStatusChanged($post_id);
+                    break;
+                case 'product':
+                    if ($post->post_status != 'publish' || !$product = wc_get_product($post)) {
+                        return;
+                    }
+                    $this->handleProductHasBeenPublished($post_id);
+                    break;
             }
+        }
+    }
+
+    /**
+     * @param $product_id
+     */
+    public function handleWooProductUpdated($product_id)
+    {
+        /** @var \WC_Product $product */
+        if (($product = wc_get_product($product_id))) {
+            $this->handleProductHasBeenPublished($product->get_id());
+        }
+    }
+
+    /**
+     * @param $product_id
+     */
+    public function handleWooProductTrashed($product_id)
+    {
+        /** @var \WC_Product $product */
+        $this->handleProductHasBeenDeleted($product_id);
+    }
+
+    /**
+     * @param $post_id
+     */
+    public function handlePostTrashed($post_id)
+    {
+        switch (get_post_type($post_id)) {
+            case 'product':
+                $this->handleProductHasBeenDeleted($post_id);
+                break;
+        }
+    }
+
+    /**
+     * @param $post_id
+     */
+    public function handlePostRestored($post_id)
+    {
+        switch(get_post_type($post_id)) {
+            case 'product':
+                $this->handleProductHasBeenRestored($post_id);
+                break;
         }
     }
 

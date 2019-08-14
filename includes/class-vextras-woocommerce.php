@@ -298,6 +298,25 @@ class Vextras_Woocommerce {
 		$this->loader->add_action('woocommerce_thankyou', $service, 'handleOrderStatusChanged');
 		$this->loader->add_action('woocommerce_order_status_changed', $service, 'handleOrderStatusChanged');
 
+		// trashed and restored
+        $this->loader->add_action('wp_trash_post', $service, 'handlePostTrashed', 10);
+        $this->loader->add_action('untrashed_post', $service, 'handlePostRestored', 10);
+
+		// save post hook for all posts
+        $this->loader->add_action('save_post', $service, 'handlePostSaved', 10, 3);
+
+        // woo api product created
+        $this->loader->add_action('woocommerce_new_product', $service, 'handleWooProductUpdated', 10, 1);
+
+        // woo api product updated
+        $this->loader->add_action( 'woocommerce_update_product', $service, 'handleWooProductUpdated', 10, 1 );
+
+        // woo api product trashed
+        $this->loader->add_action( 'woocommerce_trash_product', $service, 'handleWooProductTrashed', 10, 1 );
+
+        // woo api product deleted
+        $this->loader->add_action( 'woocommerce_delete_product', $service, 'handleWooProductTrashed', 10, 1 );
+
 		// cart hooks
         $this->loader->add_action('woocommerce_ajax_added_to_cart', $service, 'handleAjaxAddedToCart');
 
@@ -311,13 +330,11 @@ class Vextras_Woocommerce {
         $this->loader->add_action('woocommerce_after_cart_item_quantity_update', $service, 'handleCartQuantityUpdated');
 
         // when the cart is finally updated we grab the hook
-        $this->loader->add_action('woocommerce_cart_updated', $service, 'handleCartUpdated');
+        $this->loader->add_filter('woocommerce_update_cart_action_cart_updated', $service, 'handleCartUpdated');
+        //$this->loader->add_action('woocommerce_cart_updated', $service, 'handleCartUpdated');
 
         // if the cart is emptied we listen for that
 		$this->loader->add_action('woocommerce_cart_emptied', $service, 'handleCartEmptied');
-
-		// save post hook for products
-		$this->loader->add_action('save_post', $service, 'handlePostSaved', 10, 3);
 
 		// handle the user registration hook
 		$this->loader->add_action('user_register', $service, 'handleUserRegistration');

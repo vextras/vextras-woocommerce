@@ -31,6 +31,32 @@ abstract class Vextras_Woocommerce_Options
     }
 
     /**
+     * @param int $page
+     * @param int $limit
+     * @return \stdClass
+     */
+    public function getSkusInStore($page = 1, $limit = 100)
+    {
+        $response = wc_get_products(array(
+            'paginate' => true,
+            'page' => $page,
+            'limit' => $limit,
+            'status' => 'publish',
+        ));
+
+        foreach ($response->products as $key => $result) {
+            /** @var \WC_Product $result */
+            $response->products[$key] = (object) array(
+                'id' => $result->get_id(),
+                'sku' => $result->sku,
+                'qty' => $result->get_stock_quantity()
+            );
+        }
+
+        return $response;
+    }
+
+    /**
      * @return bool
      */
     public function isAdmin()
@@ -464,6 +490,14 @@ abstract class Vextras_Woocommerce_Options
         }
 
         return null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function shouldPreventApiRequests()
+    {
+        return !$this->verifiedAccount() || $this->isPaused() || $this->isBroken();
     }
 
     /**

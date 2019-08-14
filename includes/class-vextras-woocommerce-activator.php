@@ -31,7 +31,7 @@ class Vextras_Woocommerce_Activator {
         $keys = Vextras_Woocommerce_Activator::create_keys('Vextras', 'USER_ID', 'read_write');
 
         update_option('vextras-woocommerce', $data = array(
-            'verfied_account' => false,
+            'verified_account' => false,
             'unique_install_key' => wc_rand_hash(),
             'woo_consumer_key' => $keys['consumer_key'],
             'woo_consumer_secret' => $keys['consumer_secret']

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="a0aad372-8d46-4af3-9134-8fa416068e55" name="supplyfetch.com" url="http://supplyfetch.sftp.wpengine.com">
+        <fileTransfer host="supplyfetch.sftp.wpengine.com" port="2222" rootFolder="/wp-content/plugins/vextras-woocommerce" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="2222" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
