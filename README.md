@@ -1,12 +1,12 @@
 ## Step 1
-####Enable the WooCommerce API
+#### Enable the WooCommerce API
 If it’s not already been activated, enable the WooCommerce API. This will allow us to transfer order/product/customer data from your store and send it to any app or initiate a Vextras workflow.
 
 1. Login to your WooCommerce powered store
 2. Enable the REST API by following these instructions
 
 ## Step 2
-####Add your WooCommerce store to Vextras
+#### Add your WooCommerce store to Vextras
 Once the API is enabled, you will be able to connect your WooCommerce store with Vextras.
 
 1. Login to your Vextras account
