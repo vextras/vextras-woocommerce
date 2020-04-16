@@ -1,10 +1,12 @@
 === Vextras for WooCommerce ===
 Contributors: ryanhungate, khungate
-Tags: ecommerce,email,workflows,mailchimp,highrise,xero,accounting,google,analytics,woocommerce,order updates,automation
+Tags: marketing,email,workflows,automation,messaging
 Donate link: https://www.vextras.com
-Requires at least: 4.3
-Tested up to: 4.4.2
-Stable tag: 4.4.2
+Requires at least: 4.9
+Tested up to: 5.4
+Stable tag: 2.0
+WC requires at least: 3.5
+WC tested up to: 4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +18,7 @@ Vextras is a must-have plugin for any WooCommerce store that wants to drive sale
 
 Vextras allows WooCommerce retailers to send targeted e-mails based on customer behavior like abandoned carts, customer reviews, rewards and more. In addition, shop owners can sync their e-commerce store with software they depend on to run their businesses.
 
-**Workflows**
+**Messaging Workflows**
 
 *Targeted e-mail messaging that will create sales & save time*
 
@@ -36,6 +38,14 @@ Every [app integration](https://www.vextras.com/apps) we've built goes far beyon
 * Integrate your online store with hundreds of apps.
 * No complicated set-ups or recipes to configure, everything just works.
 
+**Product Manager**
+
+If you run an e-commerce store, you’ve probably spent quite a bit of time working with product information you get from suppliers. It may not sound like a big deal, but it can be a real headache for store owners. When you consider the variety of suppliers and the quality of the information they provide, it’s difficult to manage without resorting to home-grown programs or even worse – Excel or Access. These solutions may work, but they’re slow, difficult to upgrade and require a lot of manual intervention to work correctly. Until now, there hasn’t been a single consolidated system that can effectively manage your product information.
+
+* Connect your product catalog with your vendors
+* Effortlessly update pricing and inventory
+* Exclude, add, update and merge product information
+
 **More Features**
 
 * Intuitive dashboard - Track key metrics of your store’s performance at various time intervals.
@@ -54,23 +64,17 @@ Every [app integration](https://www.vextras.com/apps) we've built goes far beyon
 * No commitment - There are no long-term contracts when you use Vextras. Pay as long as you feel our product provides value in building your online business.
 
 == Installation ==
+**Before You Start**
 
-Getting going with the Vextras plugin is very easy. Follow these steps to connect your store with Vextras in just a few minutes.
+* Your website must have SSL enabled. If you don’t have a SSL for your store, please contact your hosting provider for options.
+* If you already have an account with Vextras, login with your existing e-mail address and password.
+* If you don’t have an existing Vextras account, we will create a new account for you on the fly inside of WordPress.
+* We provide a free trial of our service for 30 days. During this time you will have access to all of our features. 
+* After this trial period is over, a paid subscription is required to use any of our tools.
+* After activation, apply plugin updates as you would normally with any other plugin.
+* All configuration of apps and workflows will occur in your Vextras dashboard.
 
-**Step 1**
-
-*Enable the WooCommerce API*
-
-If it’s not already been activated, enable the WooCommerce API. This will allow us to transfer order/product/customer data from your store and send it to any app or initiate a Vextras workflow.
-
-1. Login to your WooCommerce powered store
-1. Enable the REST API by following these instructions
-
-**Step 2**
-
-*Add your WooCommerce store to Vextras*
-
-Once the API is enabled, you will be able to connect your WooCommerce store with Vextras.
+*Download the Vextras plugin*
 
 1. Login to your [Vextras account](https://app.vextras.com/auth/login)
 1. Click ‘+ Add New’ on the bottom left
@@ -78,32 +82,15 @@ Once the API is enabled, you will be able to connect your WooCommerce store with
 1. Install the Vextras plugin
 1. Activate the plugin
 
-**Plugin notes**
-
-* Your website must have SSL enabled. If you don’t have a SSL for your store, please contact your hosting provider for options.
-* If you already have an account with Vextras, login with your existing e-mail address and password.
-* If you don’t have an existing Vextras account, we will create a new account for you on the fly inside of WordPress.
-* We provide a free trial of our service for 30 days. During this time you will have access to our Professional plan and all of its features. After this trial period is over, a paid subscription is required to use any of our tools.
-* After activation, apply plugin updates as you would normally with any other plugin.
-* All configuration of apps and workflows will occur in your Vextras dashboard.
-
 == Frequently Asked Questions ==
 
 = How does the free trial work? =
 
-For 30 days, you will have access to our Professional plan and all of its features. You may put a credit card on file and choose a plan that fits your needs at anytime. If you don’t provide payment information by the end of the trial, all services will be paused.
+For 30 days, you have access to all of our features. You may add a credit card at any time. If you don’t provide payment information by the end of the trial, all services will be paused.
 
 = Is there a long-term contract? =
 
-No, there are no long-term contracts or commitments on your part. We pride ourselves on making Vextras a pay as you go service that you will want to use and value.
-
-= What subscription plan should I choose? =
-
-Pick a subscription plan that fits your average monthly order volume. Don’t worry, you may adjust this anytime as your business needs change or simply enable [auto-scale pricing](https://www.vextras.com/docs/vextras-account-information/#subscriptions).
-
-= What happens if I reach my order limit? =
-
-If you reach your order limit before a billing cycle completes, your account will be paused unless you have auto-scale pricing enabled. You may upgrade your account to a plan that fits your needs at anytime. We will synchronize the data from the time it was paused to the current date on plan renewal.
+No. There are no long-term contracts or commitments on your part. We pride ourselves on making Vextras a pay as you go service that you will want to use and value.
 
 = Is my data secure? =
 
@@ -111,11 +98,7 @@ We implement state-of-the-art security measures to maintain the safety of your s
 
 = Do canceled orders count towards my totals? =
 
-No. If you have canceled orders in your store before they are successfully processed, they will not count against your monthly allotment on any subscription plan.
-
-= Can I change plans? =
-
-Yes. You can change plans anytime in your account ‘Plans’ area. Billing for upgrades will prorate based on your current billing cycle. Unfortunately, we do not offer partial credit for account downgrades or cancellations.
+No. If you have canceled orders in your store before they successfully process, they will not count towards your monthly bill.
 
 = Can I buy only one app or workflow? =
 
@@ -135,5 +118,3 @@ This upgrade is now required to be compatible with the [Vextras 7.0](https://www
 * Added ability to control the opt-in box location at checkout.
 * Added capability to click back to a cart on any device i.e. mobile, tablet or desktop, not just the original source of where an abandoned cart originated.
 * Enabled toggle to turn off all WooCommerce notifications if you’d prefer to use our workflows for notifications instead.
-
-
